@@ -11,7 +11,6 @@
 - [LVS的八种调度算法](#LVS的八种调度算法)
 
 ## 一、负载均衡LVS基本介绍
----------------------
 LB集群的架构和原理很简单，就是当用户的请求过来时，会直接分发到Director Server上，然后它把用户的请求根据设置好的调度算法，智能均衡地分发到后端真正服务器(real server)上。为了避免不同机器上用户请求得到的数据不一样，需要用到了共享存储，这样保证所有用户请求的数据是一样的。
 
 <p>LVS是Linux Virtual Server的简写，即Linux虚拟服务器，是一个虚拟的服务器集群系统。这是一个由章文嵩博士发起的一个开源项目，它的官方网站是 http://www.linuxvirtualserver.org。LVS工作在一台server上提供Directory（负载均衡器）的功能，本身并不提供服务，只是把特定的请求转发给对应的realserver（真正提供服务的主机），从而实现集群环境中的负载均衡。LVS架构从逻辑上可分为调度层、Server集群层和共享存储。</p>
@@ -34,8 +33,7 @@ LB集群的架构和原理很简单，就是当用户的请求过来时，会直
 <br>基于 HTTP 协议：Haproxy，Nginx，ATS（Apache Traffic Server），squid，varnish
 <br>基于 MySQL 协议：mysql-proxy
 
-二、LVS的基本工作原理
----------------------
+## 二、LVS的基本工作原理
 
 ![](https://ws1.sinaimg.cn/large/006jQWURgy1g619ex5ma5j30o70brglq.jpg) 
 1.	 当用户向负载均衡调度器（Director Server）发起请求，调度器将请求发往至内核空间 
@@ -43,16 +41,14 @@ LB集群的架构和原理很简单，就是当用户的请求过来时，会直
 3. 	IPVS是工作在INPUT链上的，当用户请求到达INPUT时，IPVS会将用户请求和自己已定义好的集群服务进行比对，如果用户请求的就是定义的集群服务，那么此时IPVS会强行修改数据包里的目标IP地址及端口，并将新的数据包发往POSTROUTING链 
 4. 	POSTROUTING链接收数据包后发现目标IP地址刚好是自己的后端服务器，那么此时通过选路，将数据包最终发送给后端的服务器
 
-三、LVS的组成
--------------
+## 三、LVS的组成
 
 LVS 由2部分程序组成，包括 ipvs 和 ipvsadm。
 
 1.	ipvs(ip virtual server)：一段代码工作在内核空间，叫ipvs，是真正生效实现调度的代码，在 2.4.23 之前，必须向内核打补丁，并重新编译内核。在 2.4.23 和 2.6 之后的版本，ipvs 直接内置在内核中。。
 2.	ipvsadm：另外一段是工作在用户空间，叫ipvsadm，负责为ipvs内核框架编写规则，定义谁是集群服务，而谁是后端真实的服务器(Real Server)
 
-四、LVS相关术语
----------------
+## 四、LVS相关术语
 
 1.	DS：Director Server。指的是前端负载均衡器节点。
 2.	RS：Real Server。后端真实的工作服务器。
@@ -63,8 +59,7 @@ LVS 由2部分程序组成，包括 ipvs 和 ipvsadm。
 
 下边是三种工作模式的原理和特点总结。
 
-五、LVS/NAT原理和特点
----------------------
+## 五、LVS/NAT原理和特点
 
 #### 1. 重点理解NAT方式的实现原理和数据包的改变。
 
@@ -83,8 +78,7 @@ LVS 由2部分程序组成，包括 ipvs 和 ipvsadm。
 -	RS可以使用任意操作系统
 -	缺陷：对Director Server压力会比较大，请求和响应都需经过director server
 
-六、LVS/DR原理和特点
---------------------
+## 六、LVS/DR原理和特点
 
 ![](https://ws1.sinaimg.cn/large/006jQWURgy1g619phsfeej30p10e0q3d.jpg)
 
@@ -123,8 +117,7 @@ LVS 由2部分程序组成，包括 ipvs 和 ipvsadm。
 
 18.	修改RS上内核参数（arp_ignore和arp_announce）将RS上的VIP配置在lo接口的别名上，并限制其不能响应对VIP地址解析请求。
 
-七、LVS/Tun原理和特点
----------------------
+## 七、LVS/Tun原理和特点
 
 在原有的IP报文外再次封装多一层IP首部，内部IP首部(源地址为CIP，目标IIP为VIP)，外层IP首部(源地址为DIP，目标IP为RIP)
 
@@ -139,8 +132,7 @@ LVS 由2部分程序组成，包括 ipvs 和 ipvsadm。
 
 其实企业中最常用的是 DR 实现方式，而 NAT 配置上比较简单和方便，后边实践中会总结 DR 和 NAT 具体使用配置过程。
 
-八、NAT/DR/TUN比较
-------------------
+## 八、NAT/DR/TUN比较
 
 ![](https://ws1.sinaimg.cn/large/006jQWURgy1g61a1f90hyj30lu0c2aeb.jpg)
 
@@ -152,9 +144,7 @@ LVS 由2部分程序组成，包括 ipvs 和 ipvsadm。
 | 特点       | 封装IP           | 地址转化 | 修改MAC |
 | 支持OS     | 需要支持IPIP隧道 | Any      | 大部分  |
 
-九、LVS的八种调度算法
----------------------
-
+## 九、LVS的八种调度算法
 #### 1. 轮叫调度 rr
 
 > round robin，这种算法是最简单的，就是按依次循环的方式将请求调度到不同的服务器上，该算法最大的特点就是简单。轮询算法假设所有的服务器处理请求的能力都是一样的，调度器会将所有的请求平均分配给每个真实服务器，不管后端 RS 配置和处理能力，非常均衡地分发下去。
