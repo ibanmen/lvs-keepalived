@@ -5,7 +5,7 @@
 
 - [前言](#前言)
 - [keepalive简介](#keepalive简介)
-- [keepalived 搭建](#keepalived 搭建)
+- [keepalived 搭建](#keepalived搭建)
 
 
 ## keepalive简介：
@@ -42,7 +42,7 @@
 ### 5.ARP查询处理
 > 当内部主机通过ARP查询虚拟路由器IP地址对应的MAC地址时，MASTER路由器回复的MAC地址为虚拟的VRRP的MAC地址，而不是实际网卡的 MAC地址，这样在路由器切换时让内网机器觉察不到；而在路由器重新启动时，不能主动发送本机网卡的实际MAC地址。如果虚拟路由器开启的ARP代理 (proxy_arp)功能，代理的ARP回应也回应VRRP虚拟MAC地址；好了VRRP的简单讲解就到这里，我们下来讲解一下Keepalived的案例。
 
-## keepalived 搭建
+## keepalived搭建
 
 ![](https://ws1.sinaimg.cn/large/006jQWURgy1g61am0adejj30si0kuqat.jpg)
 
