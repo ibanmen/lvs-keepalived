@@ -1,5 +1,13 @@
 ## 前言
 >Keepalived使用的vrrp协议方式，虚拟路由冗余协议 (Virtual Router Redundancy Protocol，简称VRRP)；Heartbeat或Corosync是基于主机或网络服务的高可用方式；简单的说就是，Keepalived的目的是模拟路由器的高可用，Heartbeat或Corosync的目的是实现Service的高可用。所以一般Keepalived是实现前端高可用，常用的前端高可用的组合有，就是我们常见的LVS+Keepalived、Nginx+Keepalived、HAproxy+Keepalived。而Heartbeat或Corosync是实现服务的高可用，常见的组合有Heartbeat v3(Corosync)+Pacemaker+NFS+Httpd 实现Web服务器的高可用、Heartbeat v3(Corosync)+Pacemaker+NFS+MySQL 实现MySQL服务器的高可用。总结一下，Keepalived中实现轻量级的高可用，一般用于前端高可用，且不需要共享存储，一般常用于两个节点的高可用。而Heartbeat(或Corosync)一般用于服务的高可用，且需要共享存储，一般用于多节点的高可用。这个问题我们说明白了，又有博友会问了，那heartbaet与corosync我们又应该选择哪个好啊，我想说我们一般用corosync，因为corosync的运行机制更优于heartbeat，就连从heartbeat分离出来的pacemaker都说在以后的开发当中更倾向于corosync，所以现在corosync+pacemaker是最佳组合。但说实话我对于软件没有任何倾向性，所以我把所有的集群软件都和大家说了一下，我认为不管什么软件，只要它能存活下来都有它的特点和应用领域，只有把特定的软件放在特定的位置才能发挥最大的作用，那首先我们得对这个软件有所有了解。学习一种软件的最好方法，就是去查官方文档。好了说了那么多希望大家有所收获，下面我们来说一说keepalived。
+
+## 目录
+
+- [前言](#前言)
+- [keepalive简介](#keepalive简介)
+- [keepalived 搭建](#keepalived 搭建)
+
+
 ## keepalive简介：
 ### 1.Keepalived 定义
 >Keepalived 是一个基于VRRP协议来实现的LVS服务高可用方案，可以利用其来避免单点故障。一个LVS服务会有2台服务器运行Keepalived，一台为主服务器（MASTER），一台为备份服务器（BACKUP），但是对外表现为一个虚拟IP，主服务器会发送特定的消息给备份服务器，当备份服务器收不到这个消息的时候，即主服务器宕机的时候， 备份服务器就会接管虚拟IP，继续提供服务，从而保证了高可用性。Keepalived是VRRP的完美实现，因此在介绍keepalived之前，先介绍一下VRRP的原理。
