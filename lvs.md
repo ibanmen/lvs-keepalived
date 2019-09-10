@@ -5,9 +5,9 @@
 - [LVS的基本工作原理](#二LVS的基本工作原理)
 - [LVS的组成](#三LVS的组成)
 - [LVS相关术语](#四LVS相关术语)
-- [LVS/NAT原理和特点](#五LVS/NAT原理和特点)
-- [LVS/DR原理和特点](#六LVS/DR原理和特点)
-- [LVS/Tun原理和特点](#七LVS/Tun原理和特点)
+- [LVS/NAT原理和特点](五lvsnat原理和特点)
+- [LVS/DR原理和特点](#六lvsdr原理和特点)
+- [LVS/Tun原理和特点](#七lvstun原理和特点)
 - [LVS的八种调度算法](#八LVS的八种调度算法)
 
 ## 一、负载均衡LVS基本介绍
