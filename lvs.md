@@ -11,20 +11,19 @@
 2.    集群采用三层结构 
 <p>一般来说，LVS集群采用三层结构，其主要组成部分为：<br> A.负载调度器（load balancer），它是整个集群对外面的前端机，负责将客户的请求发送到一组服务器上执行，而客户认为服务是来自一个IP地址（我们可称之为虚拟IP地址）上的。<br> B.服务器池（server pool），是一组真正执行客户请求的服务器，执行的服务有WEB、MAIL、FTP和DNS等。 <br> C.共享存储（shared storage），它为服务器池提供一个共享的存储区，这样很容易使得服务器池拥有相同的内容，提供相同的服务</p>
 3.    常见的负载均衡器
-根据工作在的协议层划分可划分为：
+<br>根据工作在的协议层划分可划分为：
+<br>四层负载均衡：根据请求报文中的目标地址和端口进行调度
+<br>七层负载均衡：根据请求报文的内容进行调度，这种调度属于「代理」的方式
+<br>根据软硬件划分：
 
-四层负载均衡：根据请求报文中的目标地址和端口进行调度
-七层负载均衡：根据请求报文的内容进行调度，这种调度属于「代理」的方式
-根据软硬件划分：
-
-硬件负载均衡：
-F5 的 BIG-IP
-Citrix 的 NetScaler
-这类硬件负载均衡器通常能同时提供四层和七层负载均衡，但同时也价格不菲
-软件负载均衡：
-TCP 层：LVS，HaProxy，Nginx
-基于 HTTP 协议：Haproxy，Nginx，ATS（Apache Traffic Server），squid，varnish
-基于 MySQL 协议：mysql-proxy
+<br>硬件负载均衡：
+<br>F5 的 BIG-IP
+<br>Citrix 的 NetScaler
+<br>这类硬件负载均衡器通常能同时提供四层和七层负载均衡，但同时也价格不菲
+<br>软件负载均衡：
+<br>TCP 层：LVS，HaProxy，Nginx
+<br>基于 HTTP 协议：Haproxy，Nginx，ATS（Apache Traffic Server），squid，varnish
+<br>基于 MySQL 协议：mysql-proxy
 
 二、LVS的基本工作原理
 ---------------------
